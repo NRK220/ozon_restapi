@@ -1,0 +1,61 @@
+from django.db import models
+
+class DeliveryMethod(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    name = models.CharField(max_length=255)
+    warehouse_id = models.BigIntegerField()
+    warehouse = models.CharField(max_length=255)
+    tpl_provider_id = models.IntegerField()
+    tpl_provider = models.CharField(max_length=255)
+
+class Cancellation(models.Model):
+    cancel_reason_id = models.IntegerField()
+    cancel_reason = models.CharField(max_length=255, blank=True)
+    cancellation_type = models.CharField(max_length=255, blank=True)
+    cancelled_after_ship = models.BooleanField()
+    affect_cancellation_rating = models.BooleanField()
+    cancellation_initiator = models.CharField(max_length=255, blank=True)
+
+class Product(models.Model):
+    price = models.DecimalField(max_digits=10, decimal_places=4)
+    offer_id = models.CharField(max_length=100)
+    name = models.CharField(max_length=255)
+    sku = models.BigIntegerField()
+    quantity = models.IntegerField()
+    mandatory_mark = models.JSONField()
+    currency_code = models.CharField(max_length=10)
+
+class Requirement(models.Model):
+    products_requiring_gtd = models.JSONField()
+    products_requiring_country = models.JSONField()
+    products_requiring_mandatory_mark = models.JSONField()
+    products_requiring_rnpt = models.JSONField()
+    products_requiring_jw_uin = models.JSONField()
+
+class Posting(models.Model):
+    posting_number = models.CharField(max_length=100)
+    order_id = models.BigIntegerField()
+    order_number = models.CharField(max_length=100)
+    status = models.CharField(max_length=100)
+    delivery_method = models.ForeignKey(DeliveryMethod, on_delete=models.CASCADE)
+    tracking_number = models.CharField(max_length=100, blank=True)
+    tpl_integration_type = models.CharField(max_length=100)
+    in_process_at = models.DateTimeField()
+    shipment_date = models.DateTimeField()
+    delivering_date = models.DateTimeField(null=True, blank=True)
+    cancellation = models.ForeignKey(Cancellation, on_delete=models.CASCADE)
+    customer = models.JSONField(null=True, blank=True)
+    products = models.ManyToManyField(Product)
+    addressee = models.JSONField(null=True, blank=True)
+    barcodes = models.JSONField(null=True, blank=True)
+    analytics_data = models.JSONField(null=True, blank=True)
+    financial_data = models.JSONField(null=True, blank=True)
+    is_express = models.BooleanField()
+    requirements = models.ForeignKey(Requirement, on_delete=models.CASCADE)
+    parent_posting_number = models.CharField(max_length=100, blank=True)
+    available_actions = models.JSONField()
+    multi_box_qty = models.IntegerField()
+    is_multibox = models.BooleanField()
+    substatus = models.CharField(max_length=100)
+    prr_option = models.CharField(max_length=100, blank=True)
+    quantum_id = models.IntegerField()
