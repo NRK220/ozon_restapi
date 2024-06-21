@@ -11,7 +11,16 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         file_path = options['file_path']
 
-        with open(file_path) as f:
+        # Delete old data
+        self.stdout.write('Deleting old data...')
+        Posting.objects.all().delete()
+        DeliveryMethod.objects.all().delete()
+        Cancellation.objects.all().delete()
+        Product.objects.all().delete()
+        Requirement.objects.all().delete()
+        self.stdout.write(self.style.SUCCESS('Old data deleted successfully'))
+
+        with open(file_path, encoding='utf-8') as f:
             data = json.load(f)
 
         postings_data = data['result']['postings']

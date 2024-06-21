@@ -20,8 +20,8 @@ headers = {
 payload = {
     "dir": "ASC",
     "filter": {
-        "cutoff_from": "2024-06-04T14:15:22Z",
-        "cutoff_to": "2024-06-10T14:15:22Z",
+        "cutoff_from": "2024-06-03T14:15:22Z",
+        "cutoff_to": "2024-06-16T14:15:22Z",
         "status": "awaiting_packaging"
     },
     "limit": 100
